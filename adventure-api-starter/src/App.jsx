@@ -1,122 +1,140 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useReducer, useState } from "react";
+import OutdoorSection from "./components/OutdoorSection";
+import FoodCultureSection from "./components/FoodCultureSection";
+import FitnessCreativeSection from "./components/FitnessCreativeSection";
+import AdventurePlan from "./components/AdventurePlan";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const API_URL =
+  "https://my-json-server.typicode.com/Aiverson1011/adventure-api/activities";
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+const initialPlanState = {
+  plannedActivities: []
+};
 
-      <div className="ticks"></div>
+function planReducer(state, action) {
+  switch (action.type) {
+    case "ADD_ACTIVITY": {
+      const alreadyAdded = state.plannedActivities.some(
+        (activity) => activity.id === action.payload.id
+      );
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      if (alreadyAdded) {
+        return state;
+      }
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      return {
+        ...state,
+        plannedActivities: [...state.plannedActivities, action.payload]
+      };
+    }
+
+    case "REMOVE_ACTIVITY":
+      return {
+        ...state,
+        plannedActivities: state.plannedActivities.filter(
+          (activity) => activity.id !== action.payload
+        )
+      };
+
+    case "CLEAR_PLAN":
+      return {
+        ...state,
+        plannedActivities: []
+      };
+
+    default:
+      return state;
+  }
 }
 
-export default App
+function App() {
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [planState, dispatch] = useReducer(planReducer, initialPlanState);
+
+  useEffect(() => {
+    async function getActivities() {
+      try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch activities.");
+        }
+
+        const data = await response.json();
+        setActivities(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getActivities();
+  }, []);
+
+  function handleAddActivity(activity) {
+    dispatch({ type: "ADD_ACTIVITY", payload: activity });
+  }
+
+  function handleRemoveActivity(id) {
+    dispatch({ type: "REMOVE_ACTIVITY", payload: id });
+  }
+
+  function handleClearPlan() {
+    dispatch({ type: "CLEAR_PLAN" });
+  }
+
+  if (loading) {
+    return (
+      <main className="app">
+        <h1>Adventure Explorer</h1>
+        <p>Loading activities...</p>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="app">
+        <h1>Adventure Explorer</h1>
+        <p>{error}</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="app">
+      <header className="app-header">
+        <h1>Adventure Explorer</h1>
+        <p>Explore activities and build your own adventure plan.</p>
+      </header>
+
+      <AdventurePlan
+        plannedActivities={planState.plannedActivities}
+        onRemoveActivity={handleRemoveActivity}
+        onClearPlan={handleClearPlan}
+      />
+
+      <OutdoorSection
+        activities={activities}
+        onAddActivity={handleAddActivity}
+      />
+
+      <FoodCultureSection
+        activities={activities}
+        onAddActivity={handleAddActivity}
+      />
+
+      <FitnessCreativeSection
+        activities={activities}
+        onAddActivity={handleAddActivity}
+      />
+    </main>
+  );
+}
+
+export default App;
