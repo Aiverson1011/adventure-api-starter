@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ActivityCard from "./ActivityCard";
 
+// SAM
 function FoodCultureSection({ activities, onAddActivity }) {
   const [category, setCategory] = useState("all");
 

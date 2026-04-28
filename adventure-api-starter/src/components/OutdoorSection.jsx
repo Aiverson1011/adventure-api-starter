@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ActivityCard from "./ActivityCard";
 
+// NOA
 function OutdoorSection({ activities, onAddActivity }) {
   const [difficulty, setDifficulty] = useState("all");
 

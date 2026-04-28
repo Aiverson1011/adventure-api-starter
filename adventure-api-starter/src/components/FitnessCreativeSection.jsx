@@ -1,6 +1,8 @@
 import { useState } from "react";
 import ActivityCard from "./ActivityCard";
 
+// ROMAIN
+
 function FitnessCreativeSection({ activities, onAddActivity }) {
   const [searchTerm, setSearchTerm] = useState("");
 
