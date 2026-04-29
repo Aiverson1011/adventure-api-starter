@@ -3,7 +3,7 @@ import ActivityCard from "./ActivityCard";
 
 // SAM
 function FoodCultureSection({ activities, onAddActivity }) {
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState("all");
   
  
   // TODO: Filter activities so only food and culture activities are included.
@@ -14,7 +14,6 @@ function FoodCultureSection({ activities, onAddActivity }) {
   // TODO: If category is "all", show all food/culture activities.
   // Otherwise, filter by selected category.
   const filteredActivities = category === "all"
-
      ? foodCultureActivities
      : foodCultureActivities.filter((activity) => activity.category === category);
 
