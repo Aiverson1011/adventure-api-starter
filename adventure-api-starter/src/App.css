@@ -19,8 +19,18 @@ body {
   margin-bottom: 2rem;
 }
 
+/* edited */
 .app-header h1 {
   margin-bottom: 0.5rem;
+  color: black;
+  font-size: 40px;
+
+}
+
+/* new */
+.app-header p {
+  padding-top: 10px;
+  font-size: 18px;
 }
 
 .adventure-plan {
@@ -29,6 +39,17 @@ body {
   border-radius: 12px;
   margin-bottom: 2rem;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+/* new */
+.adventure-plan h2 {
+  color: black;
+  font-size: 25px;
+}
+
+/* new */
+.adventure-plan p {
+  font-size: 15px;
 }
 
 .adventure-plan ul {
