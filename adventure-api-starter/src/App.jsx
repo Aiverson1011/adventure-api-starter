@@ -5,6 +5,9 @@ import FitnessCreativeSection from "./components/FitnessCreativeSection";
 import AdventurePlan from "./components/AdventurePlan";
 import "./App.css";
 
+
+
+
 const API_URL =
   "https://my-json-server.typicode.com/Aiverson1011/adventure-api/activities";
 
